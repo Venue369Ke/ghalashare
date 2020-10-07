@@ -1,0 +1,92 @@
+<%= form_with(model: operating_hour, local: true) do |form| %>
+  <% if operating_hour.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(operating_hour.errors.count, "error") %> prohibited this operating_hour from being saved:</h2>
+
+      <ul>
+      <% operating_hour.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :monday_from %>
+    <%= form.time_select :monday_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :monday_to %>
+    <%= form.time_select :monday_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tuesday_from %>
+    <%= form.time_select :tuesday_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tuesday_to %>
+    <%= form.time_select :tuesday_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :wednesday_from %>
+    <%= form.time_select :wednesday_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :wednesday_to %>
+    <%= form.time_select :wednesday_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :thursday_from %>
+    <%= form.time_select :thursday_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :thursday_to %>
+    <%= form.time_select :thursday_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :friday_from %>
+    <%= form.time_select :friday_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :friday_to %>
+    <%= form.time_select :friday_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sat_from %>
+    <%= form.time_select :sat_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sat_to %>
+    <%= form.time_select :sat_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sunday_from %>
+    <%= form.time_select :sunday_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sunday_to %>
+    <%= form.time_select :sunday_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :warehouse_id %>
+    <%= form.text_field :warehouse_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

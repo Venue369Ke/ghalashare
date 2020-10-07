@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Company name:</strong>
+  <%= @company.company_name %>
+</p>
+
+<p>
+  <strong>Address1:</strong>
+  <%= @company.address1 %>
+</p>
+
+<p>
+  <strong>Address2:</strong>
+  <%= @company.address2 %>
+</p>
+
+<p>
+  <strong>Address3:</strong>
+  <%= @company.address3 %>
+</p>
+
+<p>
+  <strong>City:</strong>
+  <%= @company.city %>
+</p>
+
+<p>
+  <strong>Zipcode:</strong>
+  <%= @company.zipcode %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @company.country %>
+</p>
+
+<p>
+  <strong>Vatnumber:</strong>
+  <%= @company.VATnumber %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @company.description %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @company.user %>
+</p>
+
+<%= link_to 'Edit', edit_company_path(@company) %> |
+<%= link_to 'Back', companies_path %>

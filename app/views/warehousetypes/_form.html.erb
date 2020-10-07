@@ -1,0 +1,27 @@
+<%= form_with(model: warehousetype, local: true) do |form| %>
+  <% if warehousetype.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(warehousetype.errors.count, "error") %> prohibited this warehousetype from being saved:</h2>
+
+      <ul>
+      <% warehousetype.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :type_item %>
+    <%= form.text_field :type_item %>
+  </div>
+
+  <div class="field">
+    <%= form.label :warehouse_id %>
+    <%= form.text_field :warehouse_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

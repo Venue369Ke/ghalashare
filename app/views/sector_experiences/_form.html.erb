@@ -1,0 +1,27 @@
+<%= form_with(model: sector_experience, local: true) do |form| %>
+  <% if sector_experience.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(sector_experience.errors.count, "error") %> prohibited this sector_experience from being saved:</h2>
+
+      <ul>
+      <% sector_experience.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :experience_item %>
+    <%= form.text_field :experience_item %>
+  </div>
+
+  <div class="field">
+    <%= form.label :warehouse_id %>
+    <%= form.text_field :warehouse_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

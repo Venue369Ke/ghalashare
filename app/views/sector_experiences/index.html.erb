@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Sector Experiences</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Experience item</th>
+      <th>Warehouse</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sector_experiences.each do |sector_experience| %>
+      <tr>
+        <td><%= sector_experience.experience_item %></td>
+        <td><%= sector_experience.warehouse %></td>
+        <td><%= link_to 'Show', sector_experience %></td>
+        <td><%= link_to 'Edit', edit_sector_experience_path(sector_experience) %></td>
+        <td><%= link_to 'Destroy', sector_experience, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sector Experience', new_sector_experience_path %>

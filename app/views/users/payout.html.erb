@@ -1,0 +1,183 @@
+<div class="row">
+  <div class="col-md-3">
+    <ul class="sidebar-list">
+      <!--<li class="sidebar-item"><%# link_to "Payment Method", payment_method_path, class: "sidebar-link" %></li>-->
+      <li class="sidebar-item"><%= link_to "Payout Method", payout_method_path, class: "sidebar-link active" %></li>
+      <li class="sidebar-item"><%= link_to "Notification Settings", notification_settings_path, class: "sidebar-link" %></li>
+    </ul>
+  </div>
+  <div class="col-md-9">
+    <div class="panel panel-default">
+      <div class="panel-heading">Payout Method</div>
+      <div class="panel-body">
+        <div class="container text-center">
+          <% if current_user.subaccount.blank? %>
+
+              <%
+              @bank_array=[]
+              @composite=[]
+
+               banks=@banks['data']['Banks']%>
+              <% banks.each do |bank|
+
+               @code= bank.map { |e| e }[1][1]
+
+               @name= bank.map{ |b|b  }[2][1]
+
+                 @bank_array.push([@code, @name])
+
+
+
+               end %>
+
+               <%= form_tag({controller: "users", action: "create_subaccount"}, method: "post", class: "nifty_form") do %>
+
+
+               <div class="form-group">
+                 <label>Bank/M-PESA</label><br/>
+                   <%= select_tag('account_bank', options_from_collection_for_select(@bank_array, :first, :last, '1'), class:"form-control", id:"bank_selector") %>
+               </div>
+   <div class="form-group">
+               <div id="mpesa_num">
+                 <%= label_tag :account_number, "MPESA Mobile Number" %>
+                </div>
+
+                <div id="acc_num">
+                  <%= label_tag :account_number %>
+                   </div>
+                 <%= text_field_tag :account_number,nil, placeholder:"0000000000", class:"form-control" %>
+                 </div>
+
+
+
+                 <div class="form-group">
+                   <%= label_tag :business_name %>
+                   <%= text_field_tag :business_name,nil, placeholder:"best warehousing co", class:"form-control" %>
+                 </div>
+
+                 <div class="form-group">
+                   <%= label_tag :business_mobile %>
+                   <%= text_field_tag :business_mobile,nil, placeholder:"+254345666666", class:"form-control" %>
+                 </div>
+
+
+
+                  <%= submit_tag "Save", class: "btn btn-normal" %>
+               <% end %>
+
+
+
+          <% elsif !@response.blank?  %>
+              <br/>
+              <div class="text-center">
+                <h3>Account Details(You will receive your money here)</h3>
+                  <br/>
+                  <div class="table-responsive">
+                <table class="table table-condensed table-borrdered table-striped">
+                  <thead>
+                    <th> Description</th>
+                    <th> Value </th>
+
+                  </thead>
+
+               <tbody>
+
+                <tr>
+                  <td style="font-weight: 600;">
+                  Account Id
+                  </td>
+                  <td>
+                 <%= @response["data"]["data"]["id"]%>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">
+                  <% if @response["data"]["data"]["account_bank"]=="MPS"%>
+                  MPESA Phone Number
+
+                  <% else %>
+
+                   Account Number
+
+                  <% end %>
+                  </td>
+                  <td>
+                    <%= @response["data"]["data"]["account_number"]%>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">
+                  Bank
+                  </td>
+                  <td>
+                    <% if @response["data"]["data"]["account_bank"]=="MPS"%>
+                    MPESA
+
+                    <% else %>
+
+                    <%= @response["data"]["data"]["account_bank"] %>
+
+                    <% end %>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">
+                  Account Name
+                  </td>
+                  <td>
+                    <%= @response["data"]["data"]["fullname"]%>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">
+                Date Created
+                  </td>
+                  <td>
+                <%= Date.parse(@response["data"]["data"]["date_created"].to_s).strftime '%Y %m %d %T ' %>
+
+                  </td>
+
+                </tr>
+
+
+
+
+              </tbody>
+
+                </table>
+
+  </div>
+  <%= link_to 'Edit', edit_payout_path(), class: "btn btn-normal" %>
+              </div>
+
+              <% else %>
+              <h1>Oops! Something went wrong!</h1>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+      $("#mpesa_num").hide();
+    $('#bank_selector').on('change', function() {
+      if ( this.value == 'MPS')
+      {
+        $("#acc_num").hide();
+        $("#mpesa_num").show();
+      }
+      else
+      {
+        $("#mpesa_num").hide();
+        $("#acc_num").show();
+
+      }
+    });
+});
+</script>

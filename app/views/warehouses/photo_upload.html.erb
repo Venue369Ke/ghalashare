@@ -1,0 +1,62 @@
+<div class="row">
+
+  <div class="col-md-3">
+    <%= render 'warehouse_menu' %>
+
+  </div>
+
+  <div class="col-md-9">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+
+        Photos of your Warehouse(Ghala)
+      </div>
+
+      <div class="panel-body">
+        <div class="container">
+          <div class="row"></div>
+<div class="col-md-offset-3 col-md-6">
+<!-- PHOTOS UPLOAD GOES HERE-->
+
+<%= form_for @warehouse, url: warehouse_photos_path(@warehouse), method: "post", html: {multipart: true} do |f| %>
+
+
+<div class="row">
+
+
+  <div class="form-group">
+
+    <span class="btn btn-default btn-file">
+      <i class="fa fa-cloud-upload"  aria-hidden="true"></i>
+      Select photos
+      <%= file_field_tag "images[]", type: :file, multipart: true %>
+
+    </span>
+
+  </div>
+</div>
+
+<div class="text-center">
+  <%= f.submit "Add Photos", class: "btn btn-form",data: { disable_with: 'Uploading' } %>
+  </div>
+
+
+<% end %>
+
+
+</div>
+
+
+        </div>
+        <div id="photos">
+          <%= render 'photos/photos_list' %>
+
+          </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

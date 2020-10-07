@@ -1,0 +1,28 @@
+<% @warehouses.each do |warehouse| %>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading preview">
+          <%= image_tag warehouse.cover_photo(:medium),style:"max-height:200px" %>
+
+	<div class="ribbon">
+<%=	warehouse.total_size %> square metres
+	</div>
+        </div>
+        <div class="panel-body">
+          <%= link_to warehouse.title, warehouse %><br/>
+          KES<%= warehouse.price %> - <%= warehouse.warehousetypes[0].type_item %>- <%= pluralize(warehouse.services.count, "available service ") %>
+          <div id="star_<%= warehouse.id %>"></div> <%= pluralize(warehouse&.average_rating, "review") %>
+        </div>
+      </div>
+    </div>
+
+
+
+<script>
+  $('#star_<%= warehouse.id %>').raty({
+    path: '/assets',
+    readOnly: true,
+    score: <%= warehouse&.average_rating %>
+  });
+</script>
+<% end %>

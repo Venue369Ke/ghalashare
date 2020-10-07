@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Operating Hours</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Monday from</th>
+      <th>Monday to</th>
+      <th>Tuesday from</th>
+      <th>Tuesday to</th>
+      <th>Wednesday from</th>
+      <th>Wednesday to</th>
+      <th>Thursday from</th>
+      <th>Thursday to</th>
+      <th>Friday from</th>
+      <th>Friday to</th>
+      <th>Sat from</th>
+      <th>Sat to</th>
+      <th>Sunday from</th>
+      <th>Sunday to</th>
+      <th>Warehouse</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @operating_hours.each do |operating_hour| %>
+      <tr>
+        <td><%= operating_hour.monday_from %></td>
+        <td><%= operating_hour.monday_to %></td>
+        <td><%= operating_hour.tuesday_from %></td>
+        <td><%= operating_hour.tuesday_to %></td>
+        <td><%= operating_hour.wednesday_from %></td>
+        <td><%= operating_hour.wednesday_to %></td>
+        <td><%= operating_hour.thursday_from %></td>
+        <td><%= operating_hour.thursday_to %></td>
+        <td><%= operating_hour.friday_from %></td>
+        <td><%= operating_hour.friday_to %></td>
+        <td><%= operating_hour.sat_from %></td>
+        <td><%= operating_hour.sat_to %></td>
+        <td><%= operating_hour.sunday_from %></td>
+        <td><%= operating_hour.sunday_to %></td>
+        <td><%= operating_hour.warehouse %></td>
+        <td><%= link_to 'Show', operating_hour %></td>
+        <td><%= link_to 'Edit', edit_operating_hour_path(operating_hour) %></td>
+        <td><%= link_to 'Destroy', operating_hour, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Operating Hour', new_operating_hour_path %>

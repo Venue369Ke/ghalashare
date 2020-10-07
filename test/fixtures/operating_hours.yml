@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  monday_from: 2019-05-21 16:42:28
+  monday_to: 2019-05-21 16:42:28
+  tuesday_from: 2019-05-21 16:42:28
+  tuesday_to: 2019-05-21 16:42:28
+  wednesday_from: 2019-05-21 16:42:28
+  wednesday_to: 2019-05-21 16:42:28
+  thursday_from: 2019-05-21 16:42:28
+  thursday_to: 2019-05-21 16:42:28
+  friday_from: 2019-05-21 16:42:28
+  friday_to: 2019-05-21 16:42:28
+  sat_from: 2019-05-21 16:42:28
+  sat_to: 2019-05-21 16:42:28
+  sunday_from: 2019-05-21 16:42:28
+  sunday_to: 2019-05-21 16:42:28
+  warehouse: one
+
+two:
+  monday_from: 2019-05-21 16:42:28
+  monday_to: 2019-05-21 16:42:28
+  tuesday_from: 2019-05-21 16:42:28
+  tuesday_to: 2019-05-21 16:42:28
+  wednesday_from: 2019-05-21 16:42:28
+  wednesday_to: 2019-05-21 16:42:28
+  thursday_from: 2019-05-21 16:42:28
+  thursday_to: 2019-05-21 16:42:28
+  friday_from: 2019-05-21 16:42:28
+  friday_to: 2019-05-21 16:42:28
+  sat_from: 2019-05-21 16:42:28
+  sat_to: 2019-05-21 16:42:28
+  sunday_from: 2019-05-21 16:42:28
+  sunday_to: 2019-05-21 16:42:28
+  warehouse: two

@@ -1,0 +1,21 @@
+$('#photos').html("<%= j render 'photos_list'%>")
+<% if @warehouse.photos.blank? %>
+
+
+$('#photo_check').hide();
+
+
+<% end %>
+
+
+<% if !@warehouse.active && !@warehouse.price.blank? && !@warehouse.address.blank? && !@warehouse.photos.blank? && !@warehouse.title.blank? && !@warehouse.total_size.blank? && !@warehouse.services.blank? %>
+
+$('#publish_button').attr('disabled', false);
+
+
+<% else %>
+
+$('#publish_button').attr('disabled', true);
+
+
+<% end %>

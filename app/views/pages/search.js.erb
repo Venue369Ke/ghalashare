@@ -1,0 +1,2 @@
+$('#warehouse_listing').html('<%= j render partial: "warehouses/warehouses_list", locals: {warehouses: @arrWarehouses} %>')
+initialize(<%= raw @arrWarehouses.to_json %>)

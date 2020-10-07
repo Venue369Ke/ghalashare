@@ -1,0 +1,233 @@
+<div id="main">
+  <div id="left">
+      <!--SEARCH PANEL-->
+
+      <div class="row">
+      <div class="col-md-offset-4 col-md-4">
+        <button id="filter" class="btn btn-default" data-toggle="collapse" data-target="#collapsePanel">
+          More filters <i class="fa fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <br/>
+      <div class="collapse" id="collapsePanel">
+
+          <%= search_form_for @search, url: search_path, remote: true do |f| %>
+
+              <div class="row">
+                <div class="col-md-8">
+                  <label>Price range(per sqft):</label>
+                  <div id="slider-range"></div>
+                </div>
+                <div class="col-md-2">
+                  <label>Min Price:</label>
+                  <%= f.text_field :price_gteq, class: "form-control" %>
+                </div>
+                <div class="col-md-2">
+                  <label>Max Price:</label>
+                  <%= f.text_field :price_lteq, class: "form-control" %>
+                </div>
+              </div>
+              <hr/>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <%= text_field_tag :start_date, params[:start_date], readonly: true, placeholder: "Start Date", class: "form-control datepicker" %>
+                </div>
+                <div class="col-md-6">
+                  <%= text_field_tag :end_date, params[:end_date], readonly: true, placeholder: "End Date", class: "form-control datepicker" %>
+                </div>
+              </div>
+              <hr/>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "1" %> Block Warehouse
+                </div>
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "2" %> Cold Warehouse
+                </div>
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "3" %> Dangerous Goods
+                </div>
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "4" %> External Space Open
+                </div>
+              </div>
+              <hr/>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group select">
+                    <label>Industry sector</label>
+                    <%= f.collection_select(:sectorexperiences_gteq, SectorExperience.all, :id, :experience_item, {:selected =>1}, {:class=>'form-control',:id=>"experience_items", :prompt=>"select", :title =>"Field is populated automatically"}) %>
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group select">
+                    <label>Configuration</label>
+                    <%= f.collection_select(:configs_gteq, Config.all, :id, :config_item, {:selected =>1}, {:class=>'form-control',:id=>"config_items", :prompt=>"Select...", :title =>"Field is populated automatically"}) %>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group select">
+                    <label>Services</label>
+            <%= f.collection_select(:services_gteq, Service.all, :id, :service_item, {:selected =>1}, {:class=>'form-control',:id=>"service_items",:prompt=>"Select...", :title =>"Field is populated automatically"}) %>
+
+                  </div>
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group select">
+                    <label>Accessibility</label>
+                    <%= f.collection_select(:connections_gteq, Connection.all, :id, :connection_item, {:selected =>1}, {:class=>'form-control',:id=>"accessibility_items", :prompt=>"Select...", :title =>"Field is populated automatically"}) %>
+
+
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group select">
+                    <label>Equipment</label>
+                    <%= f.collection_select(:equipment_gteq, Equipment.all, :id, :equipment_item, {:selected =>1}, {:class=>'form-control',:id=>"equip_items", :prompt=>"select", :title =>"Field is populated automatically"}) %>
+
+
+                  </div>
+                </div>
+              </div>
+              <hr/>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "1" %> Block Warehouse
+                </div>
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "2" %> Cold Warehouse
+                </div>
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "3" %> Dangerous Goods
+                </div>
+                <div class="col-md-4">
+                  <%= check_box_tag "q[warehousetype_id_type_eq_any][]", "4" %> External Space Open
+                </div>
+              </div>
+              <hr/>
+
+              <div class="row text-center">
+                <%= f.submit "Search", class: "btn btn-form" %>
+              </div>
+          <% end %>
+      </div>
+      <br/>
+
+
+
+      <div class="row" id="warehouse_listing">
+        <%= render partial: "warehouses/warehouses_list", locals: {warehouses: @arrWarehouses} %>
+      </div>
+
+    </div>
+
+  </div>
+
+    <!--GOOGLE MAP-->
+    <div id="right">
+   <!-- GOOGLE MAP WILL BE HERE -->
+
+   <div id="map" style="width: 100%; height: 100%"></div>
+
+
+   <script>
+       function initialize(warehouses) {
+         var location = {lat: 44.5403, lng: -78.5463}
+
+         if (warehouses.length > 0) {
+           location = {lat: warehouses[0].latitude, lng: warehouses[0].longitude}
+         }
+
+         var map = new google.maps.Map(document.getElementById('map'), {
+           center: location,
+           zoom: 12
+         });
+
+         var marker, inforwindow;
+
+         warehouses.forEach(function(warehouse) {
+           marker = new google.maps.Marker({
+             position: {lat: warehouse.latitude, lng: warehouse.longitude},
+             map: map
+           });
+
+           inforwindow = new google.maps.InfoWindow({
+             content: "<div class='map_price'>KES" + warehouse.price + "</div>"
+           });
+
+           inforwindow.open(map, marker);
+         })
+       }
+
+       google.maps.event.addDomListener(window, 'load', function() {
+         initialize(<%= raw @arrWarehouses.to_json %>)
+       });
+   </script>
+ </div>
+  </div>
+
+
+
+<script>
+  $('#start_date').datepicker({
+    dateFormat: 'dd-mm-yy',
+    minDate: 0,
+    maxDate: '3m',
+    onSelect: function(selected) {
+      $('#end_date').datepicker("option", "minDate", selected);
+      $('#end_date').attr("disabled", false);
+    }
+  });
+
+  $('#end_date').datepicker({
+    dateFormat: 'dd-mm-yy',
+    minDate: 0,
+    maxDate: '3m',
+    onSelect: function(selected) {
+      $('#start_date').datepicker("option", "maxDate", selected);
+    }
+  });
+
+  var open = true;
+
+  $('#filter').click(function() {
+    if (open) {
+      $('#filter').html("More filters <i class='fa fa-chevron-up'></i>")
+    } else {
+      $('#filter').html("More filters <i class='fa fa-chevron-down'></i>")
+    }
+    open = !open;
+  });
+</script>
+
+<script>
+  $(function() {
+    $("#q_price_gteq").val('100');
+    $("#q_price_lteq").val('500');
+
+    $("#slider-range").slider({
+      range: true,
+      min: 0,
+      max: 1000,
+      values: [100, 500],
+      slide: function(event, ui) {
+        $("#q_price_gteq").val(ui.values[0]);
+        $("#q_price_lteq").val(ui.values[1]);
+      }
+    });
+
+    $(".ui-widget-header").css('background', '#8BC34A');
+    $(".ui-state-default, .ui-widget-content").css('background', 'white');
+    $(".ui-state-default, .ui-widget-content").css('border-color', '#8BC34A');
+  })
+</script>

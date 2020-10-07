@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Type item:</strong>
+  <%= @warehousetype.type_item %>
+</p>
+
+<p>
+  <strong>Warehouse:</strong>
+  <%= @warehousetype.warehouse %>
+</p>
+
+<%= link_to 'Edit', edit_warehousetype_path(@warehousetype) %> |
+<%= link_to 'Back', warehousetypes_path %>

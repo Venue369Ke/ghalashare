@@ -1,0 +1,69 @@
+<div class="sidebar-list">
+  <li class="sidebar-item">
+
+<%= link_to "Listing", listing_warehouse_path, class:"sidebar-link active" %>
+<% if !@warehouse.total_size.blank? %>
+<span class="pull-right text-babu"><i class="fa fa-check"></i></span>
+<% end %>
+  </li>
+  <li class="sidebar-item">
+
+<%= link_to "Pricing", pricing_warehouse_path, class:"sidebar-link active" %>
+<% if !@warehouse.price.blank? %>
+<span class="pull-right text-babu"><i class="fa fa-check"></i></span>
+<% end %>
+  </li>
+  <li class="sidebar-item">
+
+<%= link_to "Description", description_warehouse_path, class:"sidebar-link active" %>
+
+<% if !@warehouse.title.blank? %>
+<span class="pull-right text-babu"><i class="fa fa-check"></i></span>
+<% end %>
+  </li>
+  <li class="sidebar-item">
+
+<%= link_to "Photos", photo_upload_warehouse_path, class:"sidebar-link active" %>
+<% if !@warehouse.photos.blank? %>
+<span id="photo_check" class="pull-right text-babu"><i class="fa fa-check"></i></span>
+<% end %>
+  </li>
+  <li class="sidebar-item">
+
+<%= link_to "Amenities", amenities_warehouse_path, class:"sidebar-link active" %>
+<% if !@warehouse.services.blank? %>
+<span class="pull-right text-babu"><i class="fa fa-check"></i></span>
+<% end %>
+  </li>
+  <li class="sidebar-item">
+
+<%= link_to "Location", location_warehouse_path, class:"sidebar-link active" %>
+<% if !@warehouse.address.blank? %>
+<span class="pull-right text-babu"><i class="fa fa-check"></i></span>
+<% end %>
+  </li>
+
+</div>
+
+<hr/>
+
+<% is_ready = !@warehouse.active && !@warehouse.price.blank? && !@warehouse.address.blank? && !@warehouse.photos.blank? && !@warehouse.title.blank? && !@warehouse.total_size.blank? && !@warehouse.services.blank? %>
+
+<%= form_for @warehouse do |f| %>
+
+<%= f.hidden_field :active ,value: true %>
+<%= f.submit "Publish", id: "publish_button", class: "btn btn-normal btn-block", disabled: !is_ready %>
+
+
+<% end %>
+
+<% is_active = @warehouse.active %>
+<% if is_active %>
+<%= form_for @warehouse do |f| %>
+
+<%= f.hidden_field :active ,value: false %>
+<%= f.submit "Un-Publish", id: "unpublish_button", class: "btn btn-default btn-block", disabled: !is_active %>
+<% end %>
+
+
+<% end %>

@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+<div class="row">
+<div class="col-md-3">
+  <ul class="sidebar-list">
+    <li class="sidebar-item">
+      <%= link_to "Your Listings",warehouses_path, class:"sidebar-link " %>
+
+    </li>
+    <li class="sidebar-item">
+
+      <%= link_to "Your Reservations",your_reservations_path, class:"sidebar-link " %>
+    </li>
+    <li class="sidebar-item">
+
+      <%= link_to "Your Storage Locations",your_storages_path, class:"sidebar-link active " %>
+    </li>
+  </ul>
+</div>
+<div class="col-md-9">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Your Storage Locations
+  </div>
+<div class="panel-body">
+  <% if @bookings.blank? %>
+  <%= link_to "Oops! It's lonely here :(, click to book a property from the wide array of listings available", root_path %>
+
+  <% end %>
+  <% @bookings.each do |booking|  %>
+
+  <div class="row">
+    <div class="col-md-2">
+      <%= booking.start_date.strftime('%v') %>
+      <p><%= booking.status %></p>
+    </div>
+
+    <div class="col-md-2">
+      <%= link_to warehouse_path(booking.warehouse) do %>
+
+      <%= image_tag booking.warehouse.cover_photo(:thumb) %>
+
+      <% end %>
+    </div>
+
+    <div class="col-md-8">
+      <%= link_to booking.warehouse.title, warehouse_path(booking.warehouse) %>
+      <span class="pull-right text-center">
+
+<%= image_tag avatar_url(booking.warehouse.user), class:"img-circle avatar-small" %><br/>
+<%= link_to user_path(booking.warehouse.user) do %>
+<%= booking.warehouse.user.fullname %>
+
+<% end %>
+
+      </span>
+    </div>
+
+    <div class="col-md-3 text-right">
+      <%= render partial: "reviews/guest_form", locals: {reservation: booking} if booking.Approved? %>
+    </div>
+
+  </div>
+
+  <% end %>
+
+</div>
+
+</div>
+
+</div>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Ghala$hare</title>
+  <%= csrf_meta_tags %>
+  <%= action_cable_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5Yl9EgfYPWXLccCZIQKNJhmGk8jOy3Ss&libraries=places"></script>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
+    <script src="https://use.fontawesome.com/7232f5630b.js"></script>
+
+    <%= favicon_link_tag asset_path('favicon.ico') %>
+  </head>
+
+  <body>
+
+    <%= render 'shared/navbar' %>
+    <%= render 'shared/message' %>
+
+
+<% if current_user %>
+    <input type="hidden" id="user_id" value="<%= current_user.id %>">
+<% end %>
+    <div class="container main">
+
+      <%= yield %>
+
+</div>
+<div id="footer" class="row footer-nav">
+  <hr>
+    <div class="col-lg-12">
+      <div class="col-md-8">
+        <a href="#">Terms of Service</a> | <%= link_to 'Privacy Policy', privacy_policy_path %>  | <a href="https://deniswambua.com/contact_me">Contact us</a>
+      </div>
+      <div class="col-md-4">
+        <p class="muted pull-right">&copy; 2019 <a href="https://deniswambua.com">Denswami<a>. All rights reserved</p>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+</html>

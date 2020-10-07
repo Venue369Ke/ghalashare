@@ -1,0 +1,297 @@
+<div class="panel panel-default">
+  <div class="panel-heading" >
+    <span><% if @warehouse.Instant? %><i class="fa fa-bolt" style="color: #ffb400" alt="Instant Booking"></i>  <% end %> KES<%= @warehouse.price %> </span>
+    <span class="pull-right">Per Square metre per Day</span>
+  </div>
+
+  <div class="panel-body">
+    <%= form_for([@warehouse, @warehouse.reservations.new]) do |f| %>
+      <div class="row">
+        <div class="col-md-8">
+      <label>Available space:</label>&nbsp; <span id="avail_space"> <%= @warehouse.total_size %></span> m2
+      </div>
+        </div>
+      <br/>
+     <div class="row">
+       <div class="col-md-8">
+       <label>Your space requirements</label>
+       <%= f.text_field :booking_size, placeholder: "10sqm", class: "form-control", id:"r_space" %>
+       </div>
+       <div class="col-md-4">
+         <br/>
+         Square metres
+       </div>
+     </div>
+     <br/>
+    <div class="row">
+      <div class="col-md-6" id="start">
+      <label>Load in</label>
+      <%= f.text_field :start_date, readonly: true, placeholder: "Start Date", class: "form-control" %>
+      </div>
+      <div class="col-md-6">
+        <label>Load out</label>
+          <%= f.text_field :end_date, readonly: true, placeholder: "End Date", class: "form-control", disabled: true %>
+      </div>
+    </div>
+
+
+  <h4 class="message-alert text-center"><span id="message"></span></h4>
+    <div id="preview" style="display: none">
+<table class="reservation-table">
+  <tbody>
+    <tr>
+      <td>
+        Price
+      </td>
+      <td class="text-right">KES<%= @warehouse.price %></td>
+    </tr>
+    <tr>
+      <td>
+        Space
+      </td>
+      <td class="text-right"><span id="reservation_space"></span>m2</td>
+    </tr>
+    <tr>
+      <td>
+        Day(s)
+      </td>
+      <td class="text-right"><span id="reservation_days"></span></td>
+    </tr>
+    <tr id="special_details">
+      <td colspan="2">
+        Special Price <br/>
+       <ul id="special_list"></ul>
+       </td>
+    </tr>
+    <tr>
+      <td>
+      Total
+      </td>
+      <td class="total">KES<span id="reservation_total"></span></td>
+    </tr>
+  </tbody>
+</table>
+
+
+    </div>
+
+    <br/>
+    <% if @warehouse.Instant? %>
+
+    <script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+    <button type="button" id="btn_book" disabled="true" class="btn btn-normal btn-block" onClick="payWithRave()">Book Now</button>
+
+    <%# f.submit "00", id: "btn_book_s", class: "btn btn-normal btn-block", disabled: false, :style => "display: none;" %>
+    <%# f.submit "1", id: "btn_book_f", class: "btn btn-normal btn-block", disabled: false, :style => "display: none;" %>
+
+
+    <% else %>
+
+    <%= f.submit "Request Now", id:"btn_book",class: "btn btn-normal btn-block", disabled: true %>
+
+    <% end %>
+    <% end %>
+
+  </div>
+
+
+</div>
+
+
+
+<%= form_tag(warehouse_reservations_path(@warehouse,:status =>'00'), method: "post", id:"form-success") %>
+
+<%= form_tag(warehouse_reservations_path(@warehouse,:status =>'0'), method: "post",id:"form-failure") %>
+
+<%
+@client_id=@warehouse.user.subaccount
+
+%>
+<script>
+
+  $(function() {
+  if (<%= user_signed_in? %>==false)
+  $("#r_space,#start").click(function(){
+  toastr.error('You are not logged on to Ghalashare', 'Oh snap! Please log in first')
+});});
+
+
+
+  function checkDate(date) {
+    dmy = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+    return [$.inArray(dmy, unavailableDates) == -1];
+  }
+
+
+  $(function() {
+
+    unavailableDates = [];
+
+    specialDates = [];
+
+    function specialCheck() {
+
+      var start_date = $('#reservation_start_date').datepicker('getDate');
+      window.start=start_date.toString()
+      var end_date = $('#reservation_end_date').datepicker('getDate');
+      var days = (end_date - start_date)/1000/60/60/24 + 1
+      var space=document.getElementById('r_space').value
+      var avail_space=<%= @warehouse.total_size %>-space
+
+      var input = {
+        'start_date': start_date,
+        'end_date': end_date
+      }
+
+      $.ajax({
+        url: '<%= preview_warehouse_path(@warehouse) %>',
+        data: input,
+        success: function (data) {
+
+                    if(avail_space <= 0){
+                        $('#message').text("You space booking has exceeded the space available");
+                        $('#preview').hide();
+                        $('#btn_book').attr('disabled', true);
+                    }
+
+
+
+        else if (data.conflict) {
+            $('#message').text("These dates are not available");
+            $('#preview').hide();
+            $('#btn_book').attr('disabled', true);
+          } else {
+            $('#message').text("");
+            $('#preview').show();
+            $('#btn_book').attr('disabled', false);
+
+            //----------- START NEW UPDATE
+
+            $('#special_list').empty();
+            var selectedDates = [];
+
+            // Step 1: Create an array of selected dates
+            while (start_date <= end_date) {
+                selectedDates.push($.datepicker.formatDate('d-m-yy', new Date(start_date)));
+                start_date.setDate(start_date.getDate() + 1);
+            };
+
+            // Step 2: Create an array of special dates
+            var selectedSpecialDate = specialDates.filter(function(sDate){
+                var d = $.datepicker.formatDate('d-m-yy',new Date(sDate.day));
+                return selectedDates.indexOf(d) !== -1;
+            });
+          // Step 3:Calculate the total amount with custom price(if needed)
+            var total = (days - selectedSpecialDate.length) * <%= @warehouse.price %>* space;
+
+            if (selectedSpecialDate.length > 0) {
+              $('#special_details').show();
+
+              selectedSpecialDate.map(function (date) {
+                  total += date.price
+                  $('#special_list').append('<li class="text-right">('+ date.day + '): KES' + date.price +'</li>')
+              });
+            } else {
+              $('#special_details').hide();
+            }
+
+            //----------- END NEW UPDATE
+
+            $('#reservation_days').text(days);
+            $('#reservation_space').text(space);
+            $('#reservation_total').text(total);
+            $('#avail_space').text(avail_space);
+            window.value=total
+          }
+        }
+      });
+    }
+
+
+    $.ajax({
+      url: '<%= preload_warehouse_path(@warehouse) %>',
+      dateTyp: 'json',
+      success: function(data) {
+
+        specialDates = data.special_dates;
+
+        $.each(data.reservations, function(arrID, arrValue) {
+            for(var d = new Date(arrValue.start_date); d <= new Date(arrValue.end_date); d.setDate(d.getDate() + 1)) {
+              unavailableDates.push($.datepicker.formatDate('d-m-yy', d));
+            }
+        });
+
+        $.each(data.unavailable_dates, function (arrID, arrValue) {
+            unavailableDates.push($.datepicker.formatDate('d-m-yy', new Date(arrValue.day)));
+        });
+
+        $('#r_space').keyup(function(){
+specialCheck();
+         });
+
+        $('#reservation_start_date').datepicker({
+          dateFormat: 'dd-mm-yy',
+          minDate: 0,
+          maxDate: '3m',
+          beforeShowDay: checkDate,
+          onSelect: function(selected) {
+            $('#reservation_end_date').datepicker("option", "minDate", selected);
+            $('#reservation_end_date').attr("disabled", false);
+            specialCheck();
+          }
+        });
+
+        $('#reservation_end_date').datepicker({
+          dateFormat: 'dd-mm-yy',
+          minDate: 0,
+          maxDate: '3m',
+          beforeShowDay: checkDate,
+          onSelect: function(selected) {
+            $('#reservation_start_date').datepicker("option", "maxDate", selected);
+            specialCheck();
+          }
+        });
+
+      }
+    });
+
+  });
+
+  const API_publicKey = '<%= ENV['RAVE_PUBLIC_KEY'] %>'
+
+  function payWithRave() {
+    var total=document.getElementById("reservation_total");
+      var x = getpaidSetup({
+          PBFPubKey: API_publicKey,
+          customer_email: '<%= current_user&.email %>',
+          amount: window.value,
+          currency: "KES",
+          txref: window.start,
+          subaccounts: [
+            {
+              id: '<%= @client_id %>' // This assumes you have setup your commission on the dashboard.
+            }
+          ],
+          meta: [{
+              metaname: "flightID",
+              metavalue: "AP1234"
+          }],
+          onclose: function() {},
+          callback: function(response) {
+              var txref = response.tx.txRef; // collect flwRef returned and pass to a 					server page to complete status check.
+              console.log("This is the response returned after a charge", response);
+              if (
+                  response.tx.chargeResponseCode == "00" ||
+                  response.tx.chargeResponseCode == "0"
+              ) {
+             document.getElementById('btn_book_s').click();
+              } else {
+             document.getElementById('btn_book_f').click();
+              }
+
+              x.close(); // use this to close the modal immediately after payment.
+          }
+      });
+  }
+
+</script>

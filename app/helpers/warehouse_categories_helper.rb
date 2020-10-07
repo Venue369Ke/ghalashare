@@ -1,0 +1,2 @@
+module WarehouseCategoriesHelper
+end

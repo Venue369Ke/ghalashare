@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Config item:</strong>
+  <%= @config.config_item %>
+</p>
+
+<p>
+  <strong>Warehouse:</strong>
+  <%= @config.warehouse %>
+</p>
+
+<%= link_to 'Edit', edit_config_path(@config) %> |
+<%= link_to 'Back', configs_path %>
